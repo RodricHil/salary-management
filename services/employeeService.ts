@@ -1,4 +1,4 @@
-import { Employee } from "@/types/employee";
+import { Employee } from "../types/employee";
 
 export class EmployeeService {
 
@@ -10,6 +10,27 @@ export class EmployeeService {
 
   getEmployees() {
     return this.employees;
+  }
+
+  updateEmployee(
+    id:string,
+    updates: Partial<Employee>
+  ){
+
+    const employee =
+      this.employees.find(
+        emp=>emp.id===id
+      );
+
+    if(employee){
+
+      Object.assign(
+        employee,
+        updates
+      );
+
+    }
+
   }
 
 }

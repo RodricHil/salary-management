@@ -28,4 +28,36 @@ describe("EmployeeService", () => {
 
   });
 
+  it("should update employee salary", () => {
+
+    const service = new EmployeeService();
+
+    const employee = {
+
+      id:"1",
+      fullName:"John Doe",
+      jobTitle:"Software Engineer",
+      country:"India",
+      salary:50000,
+      email:"john@example.com",
+      department:"Engineering",
+      createdAt:new Date()
+
+    };
+
+    service.addEmployee(employee);
+
+    service.updateEmployee("1",{
+        salary:70000
+    });
+
+    const updatedEmployee =
+      service.getEmployees()[0];
+
+    expect(
+      updatedEmployee.salary
+    ).toBe(70000);
+
+});
+
 });
