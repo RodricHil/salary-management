@@ -92,4 +92,72 @@ filtered.length;
 
 }
 
+getMedianSalary(
+employees:Employee[]
+){
+
+const salaries=
+employees
+.map(
+emp=>emp.salary
+)
+.sort(
+(a,b)=>a-b
+);
+
+const middle=
+Math.floor(
+salaries.length/2
+);
+
+if(
+salaries.length%2===0
+){
+
+return (
+
+salaries[middle-1]+
+salaries[middle]
+
+)/2;
+
+}
+
+return salaries[middle];
+
+}
+
+
+getTotalPayroll(
+employees:Employee[]
+){
+
+return employees.reduce(
+
+(sum,employee)=>
+
+sum+employee.salary,
+
+0
+
+);
+
+}
+
+
+getEmployeeCountByCountry(
+employees:Employee[],
+country:string
+){
+
+return employees.filter(
+
+employee=>
+
+employee.country===country
+
+).length;
+
+}
+
 }

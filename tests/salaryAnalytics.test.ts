@@ -102,4 +102,80 @@ employees,
 
 });
 
+it("should return median salary",()=>{
+
+const analytics=
+new SalaryAnalytics();
+
+expect(
+analytics.getMedianSalary(
+employees
+)
+).toBe(70000);
+
+});
+
+
+it("should return total payroll",()=>{
+
+const analytics=
+new SalaryAnalytics();
+
+expect(
+analytics.getTotalPayroll(
+employees
+)
+).toBe(220000);
+
+});
+
+
+it("should return employee count by country",()=>{
+
+const analytics=
+new SalaryAnalytics();
+
+expect(
+
+analytics.getEmployeeCountByCountry(
+employees,
+"India"
+)
+
+).toBe(2);
+
+});
+
+it("should calculate median for even list",()=>{
+
+const analytics=
+new SalaryAnalytics();
+
+const evenEmployees=[
+
+...employees,
+
+{
+id:"4",
+fullName:"Tom",
+jobTitle:"Manager",
+country:"India",
+salary:90000,
+email:"tom@test.com",
+department:"Management",
+createdAt:new Date()
+}
+
+];
+
+expect(
+
+analytics.getMedianSalary(
+evenEmployees
+)
+
+).toBe(80000);
+
+});
+
 });
