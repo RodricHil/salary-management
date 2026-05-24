@@ -28,6 +28,14 @@ export default function Home() {
 
   ] = useState<any[]>([]);
 
+  const [
+
+    loading,
+
+    setLoading
+
+  ] = useState(true);
+
 
   useEffect(() => {
 
@@ -37,6 +45,8 @@ export default function Home() {
 
 
   async function fetchEmployees() {
+
+    setLoading(true);
 
     const response =
 
@@ -51,6 +61,8 @@ export default function Home() {
     setEmployees(
       data
     );
+
+    setLoading(false);
 
   }
 
@@ -78,13 +90,15 @@ font-bold
         employees={
           employees
         }
+        loading={
+          loading
+        }
       />
 
       <div
         className="
 grid
 grid-cols-1
-lg:grid-cols-2
 gap-6
 "
       >
@@ -93,11 +107,17 @@ gap-6
           employees={
             employees
           }
+          loading={
+            loading
+          }
         />
 
         <CountryChart
           employees={
             employees
+          }
+          loading={
+            loading
           }
         />
 

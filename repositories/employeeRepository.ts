@@ -17,10 +17,24 @@ export class EmployeeRepository {
 
   }
 
-  async findAll() {
-
-    return prisma.employee.findMany();
-
+  async findAll(
+    search = "",
+    country = "",
+    jobTitle = "",
+    page?: number,
+    limit?: number
+  ) {
+    return prisma.employee.findMany({
+      where: {
+        fullName: {
+          contains: search,
+        },
+        country: country ? country : undefined,
+        jobTitle: jobTitle ? jobTitle : undefined,
+      },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
+    });
   }
 
   async update(

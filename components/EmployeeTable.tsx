@@ -8,11 +8,17 @@ import { FaTrash }
 
 export default function EmployeeTable({
 
-    refresh
+    refresh,
+    search = "",
+    country = "",
+    jobTitle = ""
 
 }: {
 
-    refresh: number
+    refresh: number,
+    search?: string,
+    country?: string,
+    jobTitle?: string
 
 }) {
 
@@ -24,6 +30,24 @@ export default function EmployeeTable({
 
     ] = useState<any[]>([]);
 
+    const [
+
+        loading,
+
+        setLoading
+
+    ] = useState(true);
+
+    const [
+
+        currentPage,
+
+        setCurrentPage
+
+    ] = useState(1);
+
+    const rowsPerPage = 20;
+
 
     useEffect(() => {
 
@@ -33,6 +57,8 @@ export default function EmployeeTable({
 
 
     async function fetchEmployees() {
+
+        setLoading(true);
 
         const response =
 
@@ -47,6 +73,8 @@ export default function EmployeeTable({
         setEmployees(
             data
         );
+
+        setLoading(false);
 
     }
 
@@ -70,6 +98,82 @@ export default function EmployeeTable({
         fetchEmployees();
 
     }
+
+    const normalizedSearch =
+        search.trim().toLowerCase();
+
+    const normalizedCountry =
+        country.trim().toLowerCase();
+
+    const normalizedJobTitle =
+        jobTitle.trim().toLowerCase();
+
+    const filteredEmployees =
+        employees.filter((employee) => {
+            const fullName =
+                String(employee.fullName || "").toLowerCase();
+            const email =
+                String(employee.email || "").toLowerCase();
+            const department =
+                String(employee.department || "").toLowerCase();
+            const employeeCountry =
+                String(employee.country || "").toLowerCase();
+            const employeeJobTitle =
+                String(employee.jobTitle || "").toLowerCase();
+
+            const matchesSearch =
+                !normalizedSearch ||
+                fullName.includes(normalizedSearch) ||
+                email.includes(normalizedSearch) ||
+                department.includes(normalizedSearch);
+
+            const matchesCountry =
+                !normalizedCountry ||
+                employeeCountry.includes(normalizedCountry);
+
+            const matchesJobTitle =
+                !normalizedJobTitle ||
+                employeeJobTitle.includes(normalizedJobTitle);
+
+            return (
+                matchesSearch &&
+                matchesCountry &&
+                matchesJobTitle
+            );
+        });
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                filteredEmployees.length / rowsPerPage
+            )
+        );
+
+    const pageStartIndex =
+        (currentPage - 1) * rowsPerPage;
+
+    const paginatedEmployees =
+        filteredEmployees.slice(
+            pageStartIndex,
+            pageStartIndex + rowsPerPage
+        );
+
+    useEffect(() => {
+
+        setCurrentPage(1);
+
+    }, [normalizedSearch, normalizedCountry, normalizedJobTitle]);
+
+    useEffect(() => {
+
+        if (
+            currentPage > totalPages
+        ) {
+            setCurrentPage(totalPages);
+        }
+
+    }, [currentPage, totalPages]);
 
 
     return (
@@ -103,7 +207,7 @@ sm:px-6
             >
                 <h2 className="text-sm font-semibold tracking-wide sm:text-base">Employee Directory</h2>
                 <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium">
-                    {employees.length} records
+                    {filteredEmployees.length} records
                 </span>
             </div>
 
@@ -123,8 +227,20 @@ sm:px-6
 
                     <tbody className="divide-y divide-slate-100 bg-white">
                         {
+                            loading &&
+                            Array.from({ length: 6 }).map((_, index) => (
+                                <tr key={`employee-skeleton-${index}`}>
+                                    <td className="px-4 py-3 sm:px-6" colSpan={7}>
+                                        <div className="h-8 w-full animate-pulse rounded-lg bg-slate-100" />
+                                    </td>
+                                </tr>
+                            ))
+                        }
 
-                            employees.map(
+                        {
+
+                            !loading &&
+                            paginatedEmployees.map(
                                 employee => (
 
                                     <tr
@@ -211,9 +327,68 @@ sm:px-6
                             )
 
                         }
+
+                        {
+                            !loading &&
+                            !filteredEmployees.length && (
+                                <tr>
+                                    <td
+                                        colSpan={7}
+                                        className="px-4 py-10 text-center text-sm text-slate-500 sm:px-6"
+                                    >
+                                        No employees matched your filters.
+                                    </td>
+                                </tr>
+                            )
+                        }
                     </tbody>
                 </table>
             </div>
+
+            {
+                !loading &&
+                filteredEmployees.length > 0 && (
+                    <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-6">
+                        <p className="text-xs text-slate-600 sm:text-sm">
+                            Showing {pageStartIndex + 1} to {Math.min(pageStartIndex + rowsPerPage, filteredEmployees.length)} of {filteredEmployees.length} records
+                        </p>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setCurrentPage(
+                                        (prev) =>
+                                            Math.max(1, prev - 1)
+                                    )
+                                }
+                                disabled={currentPage === 1}
+                                className="inline-flex h-8 items-center rounded-lg border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                            >
+                                Previous
+                            </button>
+
+                            <span className="min-w-20 text-center text-xs font-medium text-slate-600 sm:text-sm">
+                                Page {currentPage} of {totalPages}
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setCurrentPage(
+                                        (prev) =>
+                                            Math.min(totalPages, prev + 1)
+                                    )
+                                }
+                                disabled={currentPage === totalPages}
+                                className="inline-flex h-8 items-center rounded-lg border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
         </div>
 
     );

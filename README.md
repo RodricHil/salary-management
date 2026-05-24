@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Salary Management System
 
-## Getting Started
+Salary Management System is a Next.js 16 application with:
 
-First, run the development server:
+- Frontend: App Router pages and UI components
+- Backend: Next.js API routes under `/api/*`
+- Database: Prisma + SQLite
+
+## Prerequisites
+
+- Node.js 20+
+- npm 10+
+
+## 1. Install Dependencies
+
+```bash
+npm install
+```
+
+## 2. Configure Environment
+
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL="file:./prisma/dev.db"
+```
+
+## 3. Setup Database
+
+Run migration and seed data:
+
+```bash
+npx prisma migrate dev
+npx prisma db seed
+```
+
+Optional Prisma commands:
+
+```bash
+npx prisma studio
+npx prisma generate
+```
+
+## 4. Run Frontend + Backend (Development)
+
+This project uses one Next.js dev server for both frontend and backend.
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App URL:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Backend API examples (same server):
 
-## Learn More
+- GET http://localhost:3000/api/employees
+- POST http://localhost:3000/api/employees
+- PUT http://localhost:3000/api/employees/:id
+- DELETE http://localhost:3000/api/employees/:id
 
-To learn more about Next.js, take a look at the following resources:
+## 5. Run Production Build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tests
 
-## Deploy on Vercel
+```bash
+npm test
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
+- Prisma ORM
+- SQLite (better-sqlite3 adapter)
+- Vitest

@@ -23,12 +23,12 @@ describe("EmployeeService", () => {
     service.addEmployee(employee);
 
     expect(
-      service.getEmployees()
+      service.getEmployees({})
     ).toHaveLength(1);
 
   });
 
-  it("should update employee salary", () => {
+  it("should update employee salary", async () => {
 
     const service = new EmployeeService();
 
@@ -52,7 +52,7 @@ describe("EmployeeService", () => {
     });
 
     const updatedEmployee =
-      service.getEmployees()[0];
+      (await service.getEmployees({}))[0];
 
     expect(
       updatedEmployee.salary
@@ -82,7 +82,7 @@ it("should delete employee", () => {
     service.deleteEmployee("1");
 
     expect(
-      service.getEmployees()
+      service.getEmployees({})
     ).toHaveLength(0);
 
 });

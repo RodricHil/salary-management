@@ -16,11 +16,35 @@ export class EmployeeService {
 
   }
 
-  async getEmployees(){
+async getEmployees({
 
-    return this.repository.findAll();
+search="",
+country="",
+jobTitle="",
+page,
+limit
 
-  }
+}:{
+
+search?:string
+country?:string
+jobTitle?:string
+page?:number
+limit?:number
+
+}){
+
+return this.repository.findAll(
+
+search,
+country,
+jobTitle,
+page,
+limit
+
+);
+
+}
 
   async updateEmployee(
     id:string,
