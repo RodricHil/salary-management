@@ -19,7 +19,7 @@ export class EmployeeService {
 
     const employee =
       this.employees.find(
-        emp=>emp.id===id
+        emp => emp.id===id
       );
 
     if(employee){
@@ -30,6 +30,16 @@ export class EmployeeService {
       );
 
     }
+
+  }
+
+  deleteEmployee(id:string){
+
+    this.employees =
+      this.employees.filter(
+        employee =>
+        employee.id!==id
+      );
 
   }
 

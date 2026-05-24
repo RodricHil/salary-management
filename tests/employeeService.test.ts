@@ -60,4 +60,31 @@ describe("EmployeeService", () => {
 
 });
 
+it("should delete employee", () => {
+
+    const service = new EmployeeService();
+
+    const employee = {
+
+      id:"1",
+      fullName:"John Doe",
+      jobTitle:"Software Engineer",
+      country:"India",
+      salary:50000,
+      email:"john@example.com",
+      department:"Engineering",
+      createdAt:new Date()
+
+    };
+
+    service.addEmployee(employee);
+
+    service.deleteEmployee("1");
+
+    expect(
+      service.getEmployees()
+    ).toHaveLength(0);
+
+});
+
 });
