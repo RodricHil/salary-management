@@ -1,45 +1,46 @@
-import { Employee } from "../types/employee";
+import { EmployeeRepository }
+from "../repositories/employeeRepository";
 
 export class EmployeeService {
 
-  private employees: Employee[] = [];
+  private repository =
+    new EmployeeRepository();
 
-  addEmployee(employee: Employee) {
-    this.employees.push(employee);
-  }
-
-  getEmployees() {
-    return this.employees;
-  }
-
-  updateEmployee(
-    id:string,
-    updates: Partial<Employee>
+  async addEmployee(
+    employee:any
   ){
 
-    const employee =
-      this.employees.find(
-        emp => emp.id===id
-      );
-
-    if(employee){
-
-      Object.assign(
-        employee,
-        updates
-      );
-
-    }
+    return this.repository.create(
+      employee
+    );
 
   }
 
-  deleteEmployee(id:string){
+  async getEmployees(){
 
-    this.employees =
-      this.employees.filter(
-        employee =>
-        employee.id!==id
-      );
+    return this.repository.findAll();
+
+  }
+
+  async updateEmployee(
+    id:string,
+    data:any
+  ){
+
+    return this.repository.update(
+      id,
+      data
+    );
+
+  }
+
+  async deleteEmployee(
+    id:string
+  ){
+
+    return this.repository.delete(
+      id
+    );
 
   }
 
