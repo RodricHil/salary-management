@@ -1,32 +1,65 @@
 "use client";
 
-import { useState }
+import {
+
+  useEffect,
+  useState
+
+}
+
   from "react";
 
-import EmployeeForm
-  from "../components/EmployeeForm";
+import DashboardCards
+  from "@/components/DashboardCards";
 
-import EmployeeTable
-  from "../components/EmployeeTable";
+import SalaryChart
+  from "@/components/SalaryChart";
+
+import CountryChart
+  from "@/components/CountryChart";
 
 export default function Home() {
 
   const [
 
-    refresh,
+    employees,
 
-    setRefresh
+    setEmployees
 
-  ] = useState(0);
+  ] = useState<any[]>([]);
+
+
+  useEffect(() => {
+
+    fetchEmployees();
+
+  }, []);
+
+
+  async function fetchEmployees() {
+
+    const response =
+
+      await fetch(
+        "/api/employees"
+      );
+
+    const data =
+
+      await response.json();
+
+    setEmployees(
+      data
+    );
+
+  }
+
 
   return (
 
     <div
       className="
-max-w-7xl
-mx-auto
-p-8
-space-y-6
+space-y-8
 "
     >
 
@@ -37,27 +70,38 @@ font-bold
 "
       >
 
-        Salary Management Dashboard
+        Dashboard
 
       </h1>
 
-      <EmployeeForm
-
-        onEmployeeAdded={() =>
-
-          setRefresh(
-            prev => prev + 1
-          )
-
-        }
-
-      />
-
-      <EmployeeTable
-        refresh={
-          refresh
+      <DashboardCards
+        employees={
+          employees
         }
       />
+
+      <div
+        className="
+grid
+grid-cols-1
+lg:grid-cols-2
+gap-6
+"
+      >
+
+        <SalaryChart
+          employees={
+            employees
+          }
+        />
+
+        <CountryChart
+          employees={
+            employees
+          }
+        />
+
+      </div>
 
     </div>
 
