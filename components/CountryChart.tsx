@@ -161,8 +161,13 @@ shadow-slate-200/60
             <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-3">
                 <div className="relative min-h-0 lg:col-span-2">
                     <div className="pointer-events-none absolute inset-8 rounded-full bg-linear-to-br from-cyan-100 via-amber-100 to-fuchsia-100 opacity-80 blur-2xl" />
-                    <div className="relative h-full overflow-hidden rounded-xl border border-slate-100 bg-white/70">
-                        <ResponsiveContainer width="100%" height="100%">
+                    <div className="relative h-70 w-full min-w-0 overflow-hidden rounded-xl border border-slate-100 bg-white/70 sm:h-75 lg:h-full lg:min-h-65">
+                        <ResponsiveContainer
+                            width="100%"
+                            height="100%"
+                            minWidth={0}
+                            minHeight={220}
+                        >
                             <PieChart>
                                 <Pie
                                     data={data}
