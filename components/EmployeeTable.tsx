@@ -46,6 +46,22 @@ export default function EmployeeTable({
 
     ] = useState(1);
 
+    const [
+
+        pendingDelete,
+
+        setPendingDelete
+
+    ] = useState<{ id: string; fullName: string } | null>(null);
+
+    const [
+
+        deleting,
+
+        setDeleting
+
+    ] = useState(false);
+
     const rowsPerPage = 20;
 
 
@@ -83,7 +99,10 @@ export default function EmployeeTable({
         id: string
     ) {
 
-        await fetch(
+        setDeleting(true);
+
+        const response =
+            await fetch(
 
             `/api/employees/${id}`,
 
@@ -95,7 +114,14 @@ export default function EmployeeTable({
 
         );
 
-        fetchEmployees();
+        if (response.ok) {
+            setEmployees((prevEmployees) =>
+                prevEmployees.filter((employee) => employee.id !== id)
+            );
+        }
+
+        setDeleting(false);
+        setPendingDelete(null);
 
     }
 
@@ -304,9 +330,10 @@ sm:px-6
 
                                                 onClick={() =>
 
-                                                    deleteEmployee(
-                                                        employee.id
-                                                    )
+                                                    setPendingDelete({
+                                                        id: employee.id,
+                                                        fullName: employee.fullName
+                                                    })
 
                                                 }
                                                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-rose-200 text-rose-600 transition hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
@@ -385,6 +412,39 @@ sm:px-6
                             >
                                 Next
                             </button>
+                        </div>
+                    </div>
+                )
+            }
+
+            {
+                pendingDelete && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
+                        <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+                            <h3 className="text-lg font-semibold text-slate-900">Delete Employee</h3>
+                            <p className="mt-2 text-sm text-slate-600">
+                                Are you sure you want to delete {pendingDelete.fullName}?
+                            </p>
+
+                            <div className="mt-5 flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setPendingDelete(null)}
+                                    disabled={deleting}
+                                    className="inline-flex h-10 items-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    No
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => deleteEmployee(pendingDelete.id)}
+                                    disabled={deleting}
+                                    className="inline-flex h-10 items-center rounded-lg bg-rose-600 px-4 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    {deleting ? "Deleting..." : "Yes, Delete"}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )
